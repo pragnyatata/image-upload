@@ -29,7 +29,7 @@ I have created a photo model with attributes
 ## Image Upload API
 
 Allowed image formats are .png, jpeg,jpg,.gif.
-![](Readme ScreenShots/allowedImageFormats.png?raw=true "Optional Title")
+![](Readme%20ScreenShots/allowedImageFormats.png)
 Multer using the disk storage will store the image in the public/upload path. Multer here is naming the image according to timestamp. So images with the same names can be uploaded/same images with different names.
 A new photo model element is created and it's saved into the database with its URL, Image name provided in the params, and multerImage name.
 
