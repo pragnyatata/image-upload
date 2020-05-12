@@ -16,6 +16,8 @@ Now all the dependencies are installed. To start the application run the followi
 npm start
 ```
 
+To run the APIs I have used postman.
+
 ## Mongoose Model
 
 To upload images I have used a library called multer.
