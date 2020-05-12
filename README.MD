@@ -29,30 +29,43 @@ I have created a photo model with attributes
 ## Image Upload API
 
 Allowed image formats are .png, jpeg,jpg,.gif.
-![](Readme%20ScreenShots/allowedImageFormats.png)
+
+<img src="Readme%20ScreenShots/allowedImageFormats.png" width="800" height="400">
+
 We can see that .jiff format cannot be upload. Any other file also cant be uploaded.
 Multer using the disk storage will store the image in the public/upload path. Multer here is naming the image according to timestamp. So images with the same names can be uploaded/same images with different names.
 A new photo model element is created and it's saved into the database with its URL, Image name provided in the params, and multerImage name.
-![](Readme%20ScreenShots/imageUpload.png)
+
+<img src="Readme%20ScreenShots/imageUpload.png" width="800" height="400">
 
 ## List Images
 
 Looping through the photo collection of database and sending Id attribute if each image.
-![](Readme%20ScreenShots/imagesList.png)
+<img src="Readme%20ScreenShots/imagesList.png" width="800" height="400">
 
 ## Get image when image id is provided and resize it according to height and width dimensions provided in the params.
 
 Using findbyId the image data is known, if no image exists with such Id returns error.
+<br/>
 Once the imageId collected, the resizedImages array is checked, if there is already a resized Image URL with the given height and width in the params. If it is present that URL is sent a response.
+<br/>
 If it isn't present we access the image file using its multerImage name.
 Along with path, height and width are sent to the resize function as arguments.
 Resize function is using a library called node-image-resizer. This creates a new image with the Image name as original name prefixed with the height and width in the public/upload folder.
 Now this resized Image URL is pushed into resizedImages array of the data along with its height and width and it is saved. Then the resized Image URL is returned.
-![](Readme%20ScreenShots/dimensions100_100.png)
+<br/>
 The first id from the images list is called with 100 x 100 dimesnions.
-![](Readme%20ScreenShots/100100.png)
+
+<img src="Readme%20ScreenShots/dimensions100_100.png" width="800" height="400">
+
 Here is the image from the url returned in the previous screenshot.
-![](Readme%20ScreenShots/300300.png)
+
+<img src="Readme%20ScreenShots/100100.png" width="800" height="400">
+
 Similarly same image with 300 x 300 dimensions.
-![](Readme%20ScreenShots/300300.png)
+
+<img src="Readme%20ScreenShots/300300.png" width="800" height="400">
+
 The resizedImages array contains two types of resized images.
+
+<img src="Readme%20ScreenShots/Mongodb_Imagtree.png" width="800" height="400">
