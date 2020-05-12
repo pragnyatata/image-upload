@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const photoRoutes = require("./routes/photo");
@@ -13,6 +14,6 @@ mongoose
 app.use(express.static("public"));
 app.use("/", photoRoutes);
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

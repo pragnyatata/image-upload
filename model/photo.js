@@ -10,6 +10,18 @@ const photoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  multerImageName: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  resizedImages: [
+    {
+      URL: String,
+      height: Number,
+      width: Number,
+    },
+  ],
 });
 
 module.exports = mongoose.model("Photo", photoSchema);

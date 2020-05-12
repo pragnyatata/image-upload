@@ -1,34 +1,7 @@
 const Photo = require("../model/photo");
-const multer = require("multer");
-const path = require("path");
-const port = 8000;
-
-const storage = multer.diskStorage({
-  destination: "./public/upload/",
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-const upload = multer({
-  storage: storage,
-  fileFilter: function (req, file, callback) {
-    var ext = path.extname(file.originalname);
-    if (
-      ext !== ".png" &&
-      ext !== ".jpg" &&
-      ext !== ".gif" &&
-      ext !== ".jpeg" &&
-      ext !== ".png"
-    ) {
-      return callback(new Error("Only images are allowed"));
-    }
-    callback(null, true);
-  },
-}).single("Image");
-
+const port = process.env.PORT || 8000;
+const resizeImage = require("../heplers/resize");
+const { upload } = require("../heplers/multerUpload");
 exports.uploadImage = (req, res) => {
   upload(req, res, (err) => {
     if (err) {
@@ -46,6 +19,7 @@ exports.uploadImage = (req, res) => {
       const photo = new Photo({
         photoURL: filePath,
         imageName: req.params.imageName,
+        multerImageName: req.file.filename,
       });
       photo.save((err, data) => {
         if (err) return res.status(400).json({ error: err });
@@ -65,8 +39,43 @@ exports.listImages = (req, res) => {
   });
 };
 exports.getImageURL = (req, res) => {
-  Photo.findById(req.params.id, function (err, data) {
+  Photo.findById(req.params.id, (err, data) => {
     if (err) return res.status(400).json({ error: err });
-    res.json(data.photoURL);
+    const height = req.params.height;
+    const width = req.params.width;
+    const imageData = data.resizedImages;
+    let resizedURL;
+    if (imageData.length >= 1) {
+      imageData.map((obj) => {
+        if (obj.height == height && obj.width == width) resizedURL = obj.URL;
+      });
+    }
+    if (resizedURL) {
+      res.status(200).json({ URL: resizedURL });
+    }
+
+    if (!resizedURL) {
+      const imgName = height + width + data.multerImageName;
+      const filePath = `./public/upload/${data.multerImageName}`;
+      resizeImage(height, width, filePath);
+      const newImage = {
+        URL:
+          req.protocol +
+          "://" +
+          req.hostname +
+          ":" +
+          port +
+          "\\upload\\" +
+          imgName,
+        height: height,
+        width: width,
+      };
+      resizedURL = newImage.URL;
+      imageData.push(newImage);
+      data.save((err) => {
+        if (err) return res.status(400).json({ error: err });
+        res.status(200).json({ URL: resizedURL });
+      });
+    }
   });
 };

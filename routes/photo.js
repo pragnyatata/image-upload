@@ -7,5 +7,5 @@ const {
 } = require("../controllers/photo");
 router.post("/uploadImage/:imageName", uploadImage);
 router.get("/listImages", listImages);
-router.get("/image/:id", getImageURL);
+router.get("/image/:id/:height/:width", getImageURL);
 module.exports = router;
